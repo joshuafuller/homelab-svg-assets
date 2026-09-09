@@ -176,3 +176,19 @@ A full example is below:
     git push origin X.Y.Z
     ```
 1. Pushing the new tag will publish the package to NPM
+
+# 10. Development
+
+1. Install Python requirements
+    ```
+    python3 -m venv venv
+    source venv/bin/activate
+    pip3 install -r requirements-dev.txt
+    ```
+
+2. Update code as needed
+
+3. Run checks
+    ```
+    make check
+    ```

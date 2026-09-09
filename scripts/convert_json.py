@@ -1,8 +1,8 @@
 import base64
 import json
 import re
-from prettytable import PrettyTable
-from prettytable import TableStyle
+
+from prettytable import PrettyTable, TableStyle
 
 # Read JSON file
 with open("icons.json", "r") as json_file:
@@ -19,10 +19,10 @@ json_obj_list = []
 
 # For each item inside "icons"
 for item in data["icons"]:
-    name = item['name']
-    path = item['path']
-    source = item['source']
-    guidelines = item['guidelines']
+    name = item["name"]
+    path = item["path"]
+    source = item["source"]
+    guidelines = item["guidelines"]
 
     #
     # Markdown
@@ -31,7 +31,7 @@ for item in data["icons"]:
     # Markdown-formatted links
     f_img = f"![]({path})"
     # If source begin with "https", then make a link, otherwise use a string
-    if re.match(r'^https', source):
+    if re.match(r"^https", source):
         f_source = f"[Source]({source})"
     else:
         f_source = f"{source}"
@@ -51,21 +51,19 @@ for item in data["icons"]:
     # Open each image
     with open(path, "rb") as image_file:
         # The data is binary, so need to get it to a string
-        data = base64.b64encode(image_file.read()).decode('ascii')
+        data = base64.b64encode(image_file.read()).decode("ascii")
 
         # Build a string
-        data_string = "data:image/svg+xml;base64,"+data
+        data_string = "data:image/svg+xml;base64," + data
 
         # Create the JSON object for each icon
-        json_obj_list .append({"data": data_string,
-                               "w": 48,
-                               "h": 48,
-                               "title": name,
-                               "aspect": "fixed"})
+        json_obj_list.append(
+            {"data": data_string, "w": 48, "h": 48, "title": name, "aspect": "fixed"}
+        )
         image_file.close()
 
 # The actual JSON string, with all whitespace removed
-json_dump = json.dumps(json_obj_list, separators=(',', ':'))
+json_dump = json.dumps(json_obj_list, separators=(",", ":"))
 
 # Print Markdown table
 with open("ICONS.md", "w") as md_output:
@@ -75,5 +73,5 @@ with open("ICONS.md", "w") as md_output:
 
 # Print XML (Diagram.net's XML is actually just JSON wrapped in a single XML tag)
 with open("homelab-svg-assets.xml", "w") as xml_output:
-    print("<mxlibrary>"+json_dump+"</mxlibrary>", file=xml_output)
+    print("<mxlibrary>" + json_dump + "</mxlibrary>", file=xml_output)
     xml_output.close()
